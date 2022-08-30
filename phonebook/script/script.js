@@ -1,6 +1,6 @@
 'use strict';
 
-const data = [
+let data = [
   {
     name: 'Иван',
     surname: 'Петров',
@@ -24,6 +24,9 @@ const data = [
 ];
 
 {
+  const sortData = (field, contactList) =>
+    contactList.sort((a, b) => (a[field] > b[field] ? 1 : -1));
+
   const createContainer = () => {
     const container = document.createElement('div');
     container.classList.add('container');
@@ -88,8 +91,8 @@ const data = [
     thead.insertAdjacentHTML('beforeend', `
       <tr>
         <th class='delete'>Удалить</th>
-        <th>Имя</th>
-        <th>Фамилия</th>
+        <th class='name'>Имя</th>
+        <th class='surname'>Фамилия</th>
         <th>Телефон</th>
         <th></th>
       </tr>  
@@ -98,6 +101,7 @@ const data = [
     const tbody = document.createElement('tbody');
 
     table.append(thead, tbody);
+    table.thead = thead;
     table.tbody = tbody;
 
     return table;
@@ -201,13 +205,16 @@ const data = [
       list: table.tbody,
       logo,
       btnAdd: buttonsGroup.btns[0],
+      btnDel: buttonsGroup.btns[1],
       formOverlay: form.overlay,
       form: form.form,
+      thead: table.thead,
     };
   };
 
   const createRow = ({name: firstname, surname, phone}) => {
     const tr = document.createElement('tr');
+    tr.classList.add('contact');
 
     const tdDel = document.createElement('td');
     tdDel.classList.add('delete');
@@ -240,6 +247,7 @@ const data = [
   };
 
   const renderContacts = (elem, data) => {
+    elem.innerHTML = '';
     const allRow = data.map(createRow);
     elem.append(...allRow);
     return allRow;
@@ -262,21 +270,51 @@ const data = [
   const init = (selectorApp, title) => {
     const app = document.querySelector(selectorApp);
     const phoneBook = renderPhoneBook(app, title);
-    const {list, logo, btnAdd, formOverlay, form} = phoneBook;
+    const {list, logo, btnAdd, formOverlay, btnDel, thead} = phoneBook;
 
-    const allRow = renderContacts(list, data);
+    let allRow = renderContacts(list, data);
     hoverRow(allRow, logo);
 
     btnAdd.addEventListener('click', () => {
       formOverlay.classList.add('is-visible');
     });
 
-    form.addEventListener('click', (e) => {
-      e.stopPropagation();
+    formOverlay.addEventListener('click', ({target}) => {
+      if (target === formOverlay || target.classList.contains('close')) {
+        formOverlay.classList.remove('is-visible');
+      }
     });
 
-    formOverlay.addEventListener('click', () => {
-      formOverlay.classList.remove('is-visible');
+    btnDel.addEventListener('click', () => {
+      document.querySelectorAll('.delete').forEach(del => {
+        del.classList.toggle('is-visible');
+      });
+    });
+
+    list.addEventListener('click', ({target}) => {
+      if (target.closest('.del-icon')) {
+        const tel = target.closest('.contact').querySelector('a').textContent;
+        data = data.filter(item => item['phone'] !== tel);
+        target.closest('.contact').remove();
+      }
+    });
+
+    // setTimeout(() => {
+    //   const contact = createRow({
+    //     name: 'Катя',
+    //     surname: 'Петрова',
+    //     phone: '001',
+    //   });
+    //   list.append(contact);
+    // }, 2000);
+
+    thead.addEventListener('click', ({target}) => {
+      const del = thead.querySelector('.delete');
+      // eslint-disable-next-line max-len
+      if (!del.classList.contains('is-visible') && (target.closest('.name') || target.closest('.surname'))) {
+        allRow = [...renderContacts(list, sortData(target.className, data))];
+        hoverRow(allRow, logo);
+      }
     });
   };
 
