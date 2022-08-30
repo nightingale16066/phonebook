@@ -38,6 +38,22 @@ body {
   background-position: center;
 }
 
+.edit-btn__container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-edit{
+  background-color: transparent;
+  border: none;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: block;
+  width: 20px;
+  height: 20px;
+  background-image: url("../img/edit.svg");
+}
+
 .delete.is-visible {
   width: 10px;
   display: table-cell;
