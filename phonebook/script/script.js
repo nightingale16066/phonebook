@@ -1,4 +1,8 @@
-'use strict';
+import control from './modules/control.js';
+
+import {renderPhoneBook, renderContacts} from './modules/render.js';
+
+import {getStorage} from './modules/serviceStorage.js';
 
 const {
   sortData,
@@ -7,17 +11,7 @@ const {
   deleteControl,
   sortFields,
   formControl,
-} = require('./modules/control');
-
-
-const {
-  renderPhoneBook,
-  renderContacts,
-} = require('./modules/render');
-
-const {
-  getStorage,
-} = require('./modules/serviceStorage');
+} = control;
 
 {
   const init = (selectorApp, title) => {
@@ -49,4 +43,5 @@ const {
 
   window.phoneBookInit = init;
 }
+
 

@@ -1,5 +1,3 @@
-'use strict';
-
 const createContainer = () => {
   const container = document.createElement('div');
   container.classList.add('container');
@@ -181,7 +179,7 @@ const createRow = ({name: firstname, surname, phone}) => {
   return tr;
 };
 
-module.exports = {
+export default {
   createContainer,
   createHeader,
   createMain,

@@ -1,18 +1,10 @@
-'use strict';
+import elems from './createElements.js';
 
-const {
-  createRow,
-} = require('./createElements');
+import {renderContacts} from './render.js';
 
-const {
-  renderContacts,
-} = require('./render');
+import * as storage from './serviceStorage.js';
 
-const {
-  getStorage,
-  setStorage,
-  removeStorage,
-} = require('./serviceStorage');
+const {createRow} = elems;
 
 const sortData = (field, contactList) =>
   contactList.sort((a, b) => (a[field] > b[field] ? 1 : -1));
@@ -66,7 +58,7 @@ const deleteControl = (btnDel, list, key) => {
     if (target.closest('.del-icon')) {
       const tel = target.closest('.contact').querySelector('a').textContent;
       // data = data.filter(item => item['phone'] !== tel);
-      removeStorage(tel, key);
+      storage.removeStorage(tel, key);
       target.closest('.contact').remove();
     }
   });
@@ -78,7 +70,7 @@ const sortFields = (thead, list, allRow, logo, key) => {
     // eslint-disable-next-line max-len
     if (!del.classList.contains('is-visible') && (target.closest('.name') || target.closest('.surname'))) {
       // eslint-disable-next-line max-len
-      allRow = [...renderContacts(list, sortData(target.className, getStorage(key)))];
+      allRow = [...renderContacts(list, sortData(target.className, storage.getStorage(key)))];
       localStorage.setItem('order', target.className);
       hoverRow(allRow, logo);
     }
@@ -98,14 +90,14 @@ const formControl = (form, list, closeModal, key, logo) => {
     const newContact = Object.fromEntries(formData);
 
     addContactPage(newContact, list, logo);
-    setStorage(key, newContact);
+    storage.setStorage(key, newContact);
 
     form.reset();
     closeModal();
   });
 };
 
-module.exports = {
+export default {
   sortData,
   hoverRow,
   modalControl,
