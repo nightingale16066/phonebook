@@ -1,8 +1,11 @@
-import control from './modules/control.js';
+import control from './script/modules/control';
 
-import {renderPhoneBook, renderContacts} from './modules/render.js';
+import {renderPhoneBook, renderContacts} from './script/modules/render';
 
-import {getStorage} from './modules/serviceStorage.js';
+import {getStorage} from './script/modules/serviceStorage';
+
+import './index.html';
+import './scss/index.scss';
 
 const {
   sortData,
@@ -41,7 +44,7 @@ const {
     formControl(form, list, closeModal, key, logo);
   };
 
-  window.phoneBookInit = init;
+  init('#app', 'Анастасия');
 }
 
 
